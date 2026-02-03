@@ -62,7 +62,6 @@ systemctl start docker
 echo "Configuring Docker as the container runtime..."
 wget https://github.com/Mirantis/cri-dockerd/releases/download/v0.3.20/cri-dockerd_0.3.20.3-0.ubuntu-jammy_amd64.deb
 dpkg -i cri-dockerd_0.3.20.3-0.ubuntu-jammy_amd64.deb
-systemctl status cri-docker
 
 # install kubeadm, kubelet and kubectl
 echo "Installing kubeadm, kubelet, and kubectl..."
