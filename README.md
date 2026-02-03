@@ -1,0 +1,1 @@
+# aws_kubernetes_terraform_configuration
