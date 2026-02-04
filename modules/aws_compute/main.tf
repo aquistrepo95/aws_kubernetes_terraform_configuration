@@ -112,7 +112,7 @@ resource "aws_vpc_security_group_ingress_rule" "etcd_server_ipv4" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "kublet_ipv4" {
-  description       = "Allow etcd server communication for control plane"  
+  description       = "Allow kubelet communication for control plane"  
   security_group_id = aws_security_group.k8s-master-sg.id
   cidr_ipv4         = "0.0.0.0/0"
   from_port         = 10250
