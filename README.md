@@ -27,31 +27,4 @@
   $ terraform apply
   ```
   NB: This may take a few minutes to complete.
-
-* Initial installation will not enable kubectl. To fix this, ssh to the AWS instance and run the following commands in the CLI.
-* Initial installation will not add kubectl config files:
-  ```
-  ubuntu@ip-10-0-1-95:~$ kubectl get nodes
-  E0203 17:26:51.192180    7009 memcache.go:265] "Unhandled Error" err="couldn't get current server API group list: Get \"http://localhost:8080/api?timeout=32s\": dial tcp                127.0.0.1:8080: connect: connection refused"
-  E0203 17:26:51.192978    7009 memcache.go:265] "Unhandled Error" err="couldn't get current server API group list: Get \"http://localhost:8080/api?timeout=32s\": dial tcp
-  127.0.0.1:8080: connect: connection refused"
-  E0203 17:26:51.194093    7009 memcache.go:265] "Unhandled Error" err="couldn't get current server API group list: Get \"http://localhost:8080/api?timeout=32s\": dial tcp
-  127.0.0.1:8080: connect: connection refused"
-  E0203 17:26:51.194423    7009 memcache.go:265] "Unhandled Error" err="couldn't get current server API group list: Get \"http://localhost:8080/api?timeout=32s\": dial tcp
-  127.0.0.1:8080: connect: connection refused"
-  E0203 17:26:51.195779    7009 memcache.go:265] "Unhandled Error" err="couldn't get current server API group list: Get \"http://localhost:8080/api?timeout=32s\": dial tcp
-  127.0.0.1:8080: connect: connection refused"
-  The connection to the server localhost:8080 was refused - did you specify the right host or port?
-  ```
-* ssh to the AWS instance from your local workstation:
-  ```
-  $ ssh ubuntu@$(terraform output -raw instance_public_ip) -i ssh_keys -v
-  ```
-  NB: $(terraform output -raw instance_public_ip) is the public IP address of the AWS instance. This address can be copied from the Amazon EC2 console.
-* Add Kubectl config files:
-  ```
-  $ mkdir -p $HOME/.kube
-  $ sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  $ sudo chown $(id -u):$(id -g) $HOME/.kube/config
-  ```  
 * The master/control plane node is ready.
