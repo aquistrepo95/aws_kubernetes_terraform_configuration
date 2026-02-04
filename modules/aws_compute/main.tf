@@ -1,9 +1,9 @@
-/*data "aws_ami" "ubuntu" {
+data "aws_ami" "ubuntu" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-22.04-amd64-server-*"]
+    values = ["ubuntu/images/hvm-ssd-gp3/ubuntu-noble-24.04-amd64-server-*"]
   }
 
   filter {
@@ -12,11 +12,12 @@
   }
 
   owners = ["099720109477"] # Canonical
-}*/
+}
+
 
 
 resource "aws_instance" "kube_server" {
-  ami                         = "ami-0c398cb65a93047f2" # Ubuntu Server 22.04 LTS (HVM), SSD Volume Type - us-east-1
+  ami                         = data.aws_ami.ubuntu.id
   instance_type               = var.instance_type
   subnet_id                   = var.instance_subnet_id
   associate_public_ip_address = true
@@ -35,10 +36,17 @@ resource "aws_instance" "kube_server" {
     destination = "/home/ubuntu/master.sh"
   }
 
+  provisioner "file" {
+    source = "./kubectlconfig.sh"
+    destination = "/home/ubuntu/kubectlconfig.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
         "chmod a+x /home/ubuntu/master.sh",
         "sudo sh /home/ubuntu/master.sh master-node",
+        "chmod a+x /home/ubuntu/kubectlconfig.sh",
+        "sh /home/ubuntu/kubectlconfig.sh"
     ]  
   }
 

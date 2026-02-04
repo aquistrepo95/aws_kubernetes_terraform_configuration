@@ -24,6 +24,7 @@ modprobe br_netfilter
 echo "Setting sysctl parameters for Kubernetes..."
 cat <<EOF | tee /etc/sysctl.d/k8s.conf
 net.bridge.bridge-nf-call-iptables  = 1
+net.bridge.bridge-nf-call-ip6tables = 1
 net.ipv4.ip_forward                 = 1
 net.ipv6.conf.all.forwarding        = 1
 net.net filter.nf_conntrack_max    = 131072
@@ -38,7 +39,8 @@ sysctl -p /etc/sysctl.conf
 
 # install container runtime docker
 echo "Installing Docker..."
-apt update
+#apt clean -y
+apt update -y
 apt install -y ca-certificates curl apt-transport-https
 install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
@@ -90,11 +92,9 @@ kubeadm init --cri-socket unix:///var/run/cri-dockerd.sock
 # set up kubeconfig for the regular user
 echo "Setting up kubeconfig for the regular user..."
 mkdir -p $HOME/.kube
-sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-sudo chown $(id -u):$(id -g) $HOME/.kube/config
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
 
 # install a pod network add-on (Weave Net)
 echo "Installing Weave Net pod network add-on..."
 kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.29/net.yaml
-
-
