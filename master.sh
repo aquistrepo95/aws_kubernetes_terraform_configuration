@@ -4,7 +4,7 @@ set -e
 
 # set hostname of node
 echo "Setting hostname to master-node..."
-hostnamectl set-hostname "master-node"
+hostnamectl set-hostname $1
 
 # disable swap
 echo "Disabling swap..."
